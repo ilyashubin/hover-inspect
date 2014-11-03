@@ -1,0 +1,207 @@
+.tl-loggerWrap {
+  position: fixed;
+  right: 0;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  font-size: 13px !important;
+  text-align: left !important;
+  pointer-events: none;
+  margin: 0 !important;
+  padding: 4px 6px !important;
+  border: none !important;
+  -webkit-animation: .5s tl-show both;
+  animation: .5s tl-show both;
+}
+
+.tl-loggerWrap:before,
+.tl-loggerWrap:after {
+  content: none;
+}
+
+.tl-loggerWrap.-out {
+  -webkit-animation: 0.5s tl-hide both;
+  animation: 0.5s tl-hide both;
+}
+
+.tl-loggerWrap code {
+  display: inline-block !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  background: -webkit-linear-gradient(rgba(241,238,239,0.95), rgba(224,224,224,0.95)) !important;
+  background: linear-gradient(rgba(241,238,239,0.95), rgba(224,224,224,0.95)) !important;
+  padding: 2px 5px 0 !important;
+  box-shadow: 0 0 2px rgba(0,0,0,0.35) !important;
+  text-shadow: none !important;
+  text-transform: none !important;
+  border: none !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-family: Consolas, Monaco, 'Andale Mono', monospace !important;
+}
+
+.tl-loggerWrap code:before,
+.tl-loggerWrap code:after {
+  content: none;
+}
+
+.tl-loggerWrap code:empty {
+  visibility: hidden;
+}
+
+@keyframes tl-show {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@-webkit-keyframes tl-show {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+
+@-webkit-keyframes tl-hide {
+  0% {
+    transform: translateY(0%);
+  }
+  45% {
+    transform: translateY(30%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+@keyframes tl-hide {
+  0% {
+    transform: translateY(0%);
+  }
+  45% {
+    transform: translateY(30%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+
+
+
+/* http://prismjs.com/download.html?themes=prism&languages=markup+css */
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+.tl-loggerWrap code[class*="language-"],
+pre[class*="language-"].tl-loggerWrap {
+  color: black;
+  text-shadow: 0 1px white;
+  font-family: Consolas, Monaco, 'Andale Mono', monospace;
+  direction: ltr;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+pre[class*="language-"].tl-loggerWrap {
+  padding: 1em;
+  margin: .5em 0;
+  overflow: auto;
+  background: #f5f2f0;
+}
+
+/* Inline code */
+.tl-loggerWrap code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+}
+
+.tl-loggerWrap .token.comment,
+.tl-loggerWrap .token.prolog,
+.tl-loggerWrap .token.doctype,
+.tl-loggerWrap .token.cdata {
+  color: slategray;
+}
+
+.tl-loggerWrap .token.punctuation {
+  color: #999;
+}
+
+.tl-loggerWrap .namespace {
+  opacity: .7;
+}
+
+.tl-loggerWrap .token.property,
+.tl-loggerWrap .token.tag,
+.tl-loggerWrap .token.boolean,
+.tl-loggerWrap .token.number,
+.tl-loggerWrap .token.constant,
+.tl-loggerWrap .token.symbol,
+.tl-loggerWrap .token.deleted {
+  color: #905;
+}
+
+.tl-loggerWrap .token.selector,
+.tl-loggerWrap .token.attr-name,
+.tl-loggerWrap .token.string,
+.tl-loggerWrap .token.char,
+.tl-loggerWrap .token.builtin,
+.tl-loggerWrap .token.inserted {
+  color: #690;
+}
+
+.tl-loggerWrap .token.operator,
+.tl-loggerWrap .token.entity,
+.tl-loggerWrap .token.url,
+.tl-loggerWrap .language-css .token.string,
+.tl-loggerWrap .style .token.string {
+  color: #a67f59;
+  background: hsla(0, 0%, 100%, .5);
+}
+
+.tl-loggerWrap .token.atrule,
+.tl-loggerWrap .token.attr-value,
+.tl-loggerWrap .token.keyword {
+  color: #07a;
+}
+
+.tl-loggerWrap .token.function {
+  color: #DD4A68;
+}
+
+.tl-loggerWrap .token.regex,
+.tl-loggerWrap .token.important,
+.tl-loggerWrap .token.variable {
+  color: #e90;
+}
+
+.tl-loggerWrap .token.important {
+  font-weight: bold;
+}
+
+.tl-loggerWrap .token.entity {
+  cursor: help;
+}
