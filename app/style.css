@@ -28,8 +28,7 @@
   display: inline-block !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
-  background: -webkit-linear-gradient(rgba(241,238,239,0.95), rgba(224,224,224,0.95)) !important;
-  background: linear-gradient(rgba(241,238,239,0.95), rgba(224,224,224,0.95)) !important;
+  background: rgba(245,242,240,0.95) !important;
   padding: 2px 5px 0 !important;
   box-shadow: 0 0 2px rgba(0,0,0,0.35) !important;
   text-shadow: none !important;
