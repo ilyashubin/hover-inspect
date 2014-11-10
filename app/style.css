@@ -51,6 +51,19 @@
   visibility: hidden;
 }
 
+.tl-overlay {
+  position: absolute;
+  z-index: 10000;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  background: rgba(52,152,219,0.08);
+  border: 1px solid rgba(52,152,219,0.18);
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
 @keyframes tl-show {
   0% {
     transform: translateY(-100%);
