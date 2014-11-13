@@ -63,7 +63,7 @@ injected = injected || (function() {
       $clone = $target.cloneNode();
       serializer = new XMLSerializer();
       stringified = serializer.serializeToString($clone);
-      stringified = stringified.slice(0, stringified.indexOf('>') + 1).replace(' xmlns="http://www.w3.org/1999/xhtml"', '');
+      stringified = stringified.slice(0, stringified.indexOf('>') + 1).replace(/( xmlns=")(.*?)(")/, '');
       this.$code.innerText = stringified;
       return this.highlight();
     };

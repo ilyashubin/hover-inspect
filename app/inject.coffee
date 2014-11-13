@@ -1,5 +1,5 @@
 injected = injected or do ->
-  
+ 
   enabled = false
 
   class TinyInspect
@@ -56,7 +56,7 @@ injected = injected or do ->
       stringified = serializer.serializeToString $clone
       stringified = stringified
         .slice 0, stringified.indexOf('>')+1
-        .replace ' xmlns="http://www.w3.org/1999/xhtml"', ''
+        .replace /( xmlns=")(.*?)(")/, ''
 
       @$code.innerText = stringified
       @highlight()

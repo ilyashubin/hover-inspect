@@ -107,15 +107,6 @@
  * @author Lea Verou
  */
 
-.tl-loggerWrap code[class*="language-"],
-pre[class*="language-"].tl-loggerWrap {
-/*  text-align: left;
-  white-space: pre;
-  word-spacing: normal;
-  word-break: normal;
-  line-height: 1.5;
-*/}
-
 .tl-loggerWrap .token.comment,
 .tl-loggerWrap .token.prolog,
 .tl-loggerWrap .token.doctype,
