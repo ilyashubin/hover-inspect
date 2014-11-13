@@ -35,7 +35,7 @@ injected = injected || (function() {
       })(this))();
       this.$overlay = document.querySelector('.tl-overlay');
       this.$wrap = document.querySelector('.tl-loggerWrap');
-      return this.$codeWrap = document.querySelector('.tl-loggerWrap code');
+      return this.$code = document.querySelector('.tl-loggerWrap code');
     };
 
     TinyInspect.prototype.destroy = function() {
@@ -55,20 +55,21 @@ injected = injected || (function() {
     };
 
     TinyInspect.prototype.logg = function(e) {
-      var $clone, $target, overlayStyleString, serializer, stringified;
+      var $clone, $target, overlayStyleString, serializer, stringified, targetRect;
       $target = e.target;
-      $clone = $target.cloneNode();
-      overlayStyleString = "width: " + ($target.getBoundingClientRect().width) + "px; height: " + ($target.getBoundingClientRect().height) + "px; top: " + ($target.getBoundingClientRect().top + window.pageYOffset) + "px; left: " + ($target.getBoundingClientRect().left + window.pageXOffset) + "px;";
+      targetRect = $target.getBoundingClientRect();
+      overlayStyleString = "width: " + targetRect.width + "px; height: " + targetRect.height + "px; top: " + (targetRect.top + window.pageYOffset) + "px; left: " + (targetRect.left + window.pageXOffset) + "px;";
       this.$overlay.style.cssText = overlayStyleString;
+      $clone = $target.cloneNode();
       serializer = new XMLSerializer();
       stringified = serializer.serializeToString($clone);
-      stringified = stringified.slice(0, stringified.indexOf('>') + 1).replace(' xmlns="http://www.w3.org/1999/xhtml"', "");
-      this.$codeWrap.innerText = stringified;
+      stringified = stringified.slice(0, stringified.indexOf('>') + 1).replace(' xmlns="http://www.w3.org/1999/xhtml"', '');
+      this.$code.innerText = stringified;
       return this.highlight();
     };
 
     TinyInspect.prototype.highlight = function() {
-      return Prism.highlightElement(this.$codeWrap);
+      return Prism.highlightElement(this.$code);
     };
 
     return TinyInspect;

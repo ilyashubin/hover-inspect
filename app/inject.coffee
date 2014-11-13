@@ -1,4 +1,5 @@
 injected = injected or do ->
+  
   enabled = false
 
   class TinyInspect
@@ -24,7 +25,7 @@ injected = injected or do ->
 
       @$overlay = document.querySelector '.tl-overlay'
       @$wrap = document.querySelector '.tl-loggerWrap'
-      @$codeWrap = document.querySelector '.tl-loggerWrap code'
+      @$code = document.querySelector '.tl-loggerWrap code'
 
     destroy: ->
       @$wrap.classList.add '-out'
@@ -40,26 +41,28 @@ injected = injected or do ->
 
     logg: (e)=>
       $target = e.target
-      $clone = $target.cloneNode()
+      targetRect = $target.getBoundingClientRect()
       overlayStyleString = "
-        width: #{$target.getBoundingClientRect().width}px;
-        height: #{$target.getBoundingClientRect().height}px;
-        top: #{$target.getBoundingClientRect().top + window.pageYOffset}px;
-        left: #{$target.getBoundingClientRect().left + window.pageXOffset}px;
+        width: #{targetRect.width}px;
+        height: #{targetRect.height}px;
+        top: #{targetRect.top + window.pageYOffset}px;
+        left: #{targetRect.left + window.pageXOffset}px;
         "
       @$overlay.style.cssText = overlayStyleString
 
-      serializer = new XMLSerializer()
+      $clone = $target.cloneNode()
+
+      serializer  = new XMLSerializer()
       stringified = serializer.serializeToString $clone
       stringified = stringified
         .slice 0, stringified.indexOf('>')+1
-        .replace ' xmlns="http://www.w3.org/1999/xhtml"', ""
+        .replace ' xmlns="http://www.w3.org/1999/xhtml"', ''
 
-      @$codeWrap.innerText = stringified
+      @$code.innerText = stringified
       @highlight()
 
     highlight: =>
-      Prism.highlightElement @$codeWrap
+      Prism.highlightElement @$code
 
 
 
