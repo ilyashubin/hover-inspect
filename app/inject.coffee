@@ -6,23 +6,30 @@ injected = injected or do ->
 
     createNodes: ->
       do appendOverlay = =>
-        $overlay = document.createElement 'div'
-        $overlay.classList.add 'tl-overlay'
+        overlayTemplate = "
+          <div class='tl-overlayWrap'>
+            <div class='tl-overlayW'></div>
+            <div class='tl-overlayH'></div>
+            <div class='tl-overlay'></div>
+          </div>
+          "
+        $overlayFrag = @fragmentFromString overlayTemplate
 
-        document.body.appendChild $overlay
+        document.body.appendChild $overlayFrag
 
       do appendLogger = =>
-        $logg = document.createElement 'div'
-        $logg.classList.add 'tl-loggerWrap'
+        logTemplate = "
+          <div class='tl-loggerWrap'>
+            <code class='language-markup'>&lt;html&gt;</code>
+          </div>
+          "
+        $logFrag = @fragmentFromString logTemplate
 
-        $code = document.createElement 'code'
-        $code.classList.add 'language-markup'
-        $code.appendChild document.createTextNode '<html>'
-        $logg.appendChild $code
-
-        document.body.appendChild $logg
+        document.body.appendChild $logFrag
 
 
+      @$overlayW = document.querySelector '.tl-overlayW'
+      @$overlayH = document.querySelector '.tl-overlayH'
       @$overlay = document.querySelector '.tl-overlay'
       @$wrap = document.querySelector '.tl-loggerWrap'
       @$code = document.querySelector '.tl-loggerWrap code'
@@ -42,13 +49,32 @@ injected = injected or do ->
     logg: (e)=>
       $target = e.target
       targetRect = $target.getBoundingClientRect()
-      overlayStyleString = "
-        width: #{targetRect.width}px;
-        height: #{targetRect.height}px;
-        top: #{targetRect.top + window.pageYOffset}px;
-        left: #{targetRect.left + window.pageXOffset}px;
+      targetWidth = targetRect.width
+      targetHeight = targetRect.height
+      targetTop = targetRect.top + window.pageYOffset
+      targetLeft = targetRect.left + window.pageXOffset
+
+      overlayWStyle = "
+        top: #{targetTop}px;
+        height: #{targetHeight}px;
         "
-      @$overlay.style.cssText = overlayStyleString
+
+      overlayHStyle = "
+        top: #{window.pageYOffset}px;
+        left: #{targetLeft}px;
+        width: #{targetWidth}px;
+        "
+
+      overlayStyle = "
+        top: #{targetTop}px;
+        left: #{targetLeft}px;
+        width: #{targetWidth}px;
+        height: #{targetHeight}px;
+        "
+
+      @$overlayW.style.cssText = overlayWStyle
+      @$overlayH.style.cssText = overlayHStyle
+      @$overlay.style.cssText = overlayStyle
 
       $clone = $target.cloneNode()
 
@@ -63,6 +89,11 @@ injected = injected or do ->
 
     highlight: =>
       Prism.highlightElement @$code
+
+    fragmentFromString: (strHTML)->
+      temp = document.createElement 'template'
+      temp.innerHTML = strHTML
+      return temp.content
 
 
 

@@ -15,24 +15,22 @@ injected = injected || (function() {
       var appendLogger, appendOverlay;
       (appendOverlay = (function(_this) {
         return function() {
-          var $overlay;
-          $overlay = document.createElement('div');
-          $overlay.classList.add('tl-overlay');
-          return document.body.appendChild($overlay);
+          var $overlayFrag, overlayTemplate;
+          overlayTemplate = "<div class='tl-overlayWrap'> <div class='tl-overlayW'></div> <div class='tl-overlayH'></div> <div class='tl-overlay'></div> </div>";
+          $overlayFrag = _this.fragmentFromString(overlayTemplate);
+          return document.body.appendChild($overlayFrag);
         };
       })(this))();
       (appendLogger = (function(_this) {
         return function() {
-          var $code, $logg;
-          $logg = document.createElement('div');
-          $logg.classList.add('tl-loggerWrap');
-          $code = document.createElement('code');
-          $code.classList.add('language-markup');
-          $code.appendChild(document.createTextNode('<html>'));
-          $logg.appendChild($code);
-          return document.body.appendChild($logg);
+          var $logFrag, logTemplate;
+          logTemplate = "<div class='tl-loggerWrap'> <code class='language-markup'>&lt;html&gt;</code> </div>";
+          $logFrag = _this.fragmentFromString(logTemplate);
+          return document.body.appendChild($logFrag);
         };
       })(this))();
+      this.$overlayW = document.querySelector('.tl-overlayW');
+      this.$overlayH = document.querySelector('.tl-overlayH');
       this.$overlay = document.querySelector('.tl-overlay');
       this.$wrap = document.querySelector('.tl-loggerWrap');
       return this.$code = document.querySelector('.tl-loggerWrap code');
@@ -55,11 +53,19 @@ injected = injected || (function() {
     };
 
     TinyInspect.prototype.logg = function(e) {
-      var $clone, $target, overlayStyleString, serializer, stringified, targetRect;
+      var $clone, $target, overlayHStyle, overlayStyle, overlayWStyle, serializer, stringified, targetHeight, targetLeft, targetRect, targetTop, targetWidth;
       $target = e.target;
       targetRect = $target.getBoundingClientRect();
-      overlayStyleString = "width: " + targetRect.width + "px; height: " + targetRect.height + "px; top: " + (targetRect.top + window.pageYOffset) + "px; left: " + (targetRect.left + window.pageXOffset) + "px;";
-      this.$overlay.style.cssText = overlayStyleString;
+      targetWidth = targetRect.width;
+      targetHeight = targetRect.height;
+      targetTop = targetRect.top + window.pageYOffset;
+      targetLeft = targetRect.left + window.pageXOffset;
+      overlayWStyle = "top: " + targetTop + "px; height: " + targetHeight + "px;";
+      overlayHStyle = "top: " + window.pageYOffset + "px; left: " + targetLeft + "px; width: " + targetWidth + "px;";
+      overlayStyle = "top: " + targetTop + "px; left: " + targetLeft + "px; width: " + targetWidth + "px; height: " + targetHeight + "px;";
+      this.$overlayW.style.cssText = overlayWStyle;
+      this.$overlayH.style.cssText = overlayHStyle;
+      this.$overlay.style.cssText = overlayStyle;
       $clone = $target.cloneNode();
       serializer = new XMLSerializer();
       stringified = serializer.serializeToString($clone);
@@ -70,6 +76,13 @@ injected = injected || (function() {
 
     TinyInspect.prototype.highlight = function() {
       return Prism.highlightElement(this.$code);
+    };
+
+    TinyInspect.prototype.fragmentFromString = function(strHTML) {
+      var temp;
+      temp = document.createElement('template');
+      temp.innerHTML = strHTML;
+      return temp.content;
     };
 
     return TinyInspect;

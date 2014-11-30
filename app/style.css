@@ -54,17 +54,36 @@
   visibility: hidden;
 }
 
-.tl-overlay {
+.tl-overlayWrap {
+  pointer-events: none;
+}
+
+.tl-overlay,
+.tl-overlayW,
+.tl-overlayH {
   position: absolute;
   z-index: 10000;
   top: 0;
   left: 0;
-  width: 0;
-  height: 0;
-  background: rgba(52,152,219,0.08);
-  border: 1px solid rgba(52,152,219,0.18);
-  pointer-events: none;
   box-sizing: border-box;
+}
+
+.tl-overlay {
+  background: rgba(52,152,219,0.08);
+}
+
+.tl-overlayW {
+  right: 0;
+  background: rgba(0,0,0,0.01);
+  border-top: 1px dashed rgba(52,152,219,0.4);
+  border-bottom: 1px dashed rgba(52,152,219,0.4);
+}
+
+.tl-overlayH {
+  height: 100vh;
+  background: rgba(0,0,0,0.01);
+  border-left: 1px dashed rgba(52,152,219,0.4);
+  border-right: 1px dashed rgba(52,152,219,0.4);
 }
 
 @keyframes tl-show {
