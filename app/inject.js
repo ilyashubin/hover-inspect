@@ -29,6 +29,7 @@ injected = injected || (function() {
           return document.body.appendChild($logFrag);
         };
       })(this))();
+      this.$overlayWrap = document.querySelector('.tl-overlayWrap');
       this.$overlayW = document.querySelector('.tl-overlayW');
       this.$overlayH = document.querySelector('.tl-overlayH');
       this.$overlay = document.querySelector('.tl-overlay');
@@ -39,7 +40,7 @@ injected = injected || (function() {
     TinyInspect.prototype.destroy = function() {
       this.$wrap.classList.add('-out');
       document.removeEventListener('mousemove', this.logg);
-      this.$overlay.outerHTML = '';
+      this.$overlayWrap.outerHTML = '';
       return setTimeout((function(_this) {
         return function() {
           return _this.$wrap.outerHTML = '';

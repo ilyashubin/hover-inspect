@@ -28,6 +28,7 @@ injected = injected or do ->
         document.body.appendChild $logFrag
 
 
+      @$overlayWrap = document.querySelector '.tl-overlayWrap'
       @$overlayW = document.querySelector '.tl-overlayW'
       @$overlayH = document.querySelector '.tl-overlayH'
       @$overlay = document.querySelector '.tl-overlay'
@@ -37,7 +38,7 @@ injected = injected or do ->
     destroy: ->
       @$wrap.classList.add '-out'
       document.removeEventListener 'mousemove', @logg
-      @$overlay.outerHTML = ''
+      @$overlayWrap.outerHTML = ''
       setTimeout =>
         @$wrap.outerHTML = ''
       , 600
