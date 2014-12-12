@@ -3,6 +3,8 @@ injected = injected or do ->
   enabled = false
 
   class TinyInspect
+    constructor: ->
+      @$cacheEl = document.body
 
     createNodes: ->
       do appendOverlay = =>
@@ -35,20 +37,15 @@ injected = injected or do ->
       @$wrap = document.querySelector '.tl-loggerWrap'
       @$code = document.querySelector '.tl-loggerWrap code'
 
-    destroy: ->
-      @$wrap.classList.add '-out'
-      document.removeEventListener 'mousemove', @logg
-      @$overlayWrap.outerHTML = ''
-      setTimeout =>
-        @$wrap.outerHTML = ''
-      , 600
-
     registerEvents: ->
       @highlight()
       document.addEventListener 'mousemove', @logg
 
     logg: (e)=>
       $target = e.target
+      return if @$cacheEl is $target
+      @$cacheEl = $target
+
       targetRect = $target.getBoundingClientRect()
       targetWidth = targetRect.width
       targetHeight = targetRect.height
@@ -87,6 +84,14 @@ injected = injected or do ->
 
       @$code.innerText = stringified
       @highlight()
+
+    destroy: ->
+      @$wrap.classList.add '-out'
+      document.removeEventListener 'mousemove', @logg
+      @$overlayWrap.outerHTML = ''
+      setTimeout =>
+        @$wrap.outerHTML = ''
+      , 600
 
     highlight: =>
       Prism.highlightElement @$code

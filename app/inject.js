@@ -9,6 +9,7 @@ injected = injected || (function() {
     function TinyInspect() {
       this.highlight = __bind(this.highlight, this);
       this.logg = __bind(this.logg, this);
+      this.$cacheEl = document.body;
     }
 
     TinyInspect.prototype.createNodes = function() {
@@ -37,17 +38,6 @@ injected = injected || (function() {
       return this.$code = document.querySelector('.tl-loggerWrap code');
     };
 
-    TinyInspect.prototype.destroy = function() {
-      this.$wrap.classList.add('-out');
-      document.removeEventListener('mousemove', this.logg);
-      this.$overlayWrap.outerHTML = '';
-      return setTimeout((function(_this) {
-        return function() {
-          return _this.$wrap.outerHTML = '';
-        };
-      })(this), 600);
-    };
-
     TinyInspect.prototype.registerEvents = function() {
       this.highlight();
       return document.addEventListener('mousemove', this.logg);
@@ -56,6 +46,10 @@ injected = injected || (function() {
     TinyInspect.prototype.logg = function(e) {
       var $clone, $target, overlayHStyle, overlayStyle, overlayWStyle, serializer, stringified, targetHeight, targetLeft, targetRect, targetTop, targetWidth;
       $target = e.target;
+      if (this.$cacheEl === $target) {
+        return;
+      }
+      this.$cacheEl = $target;
       targetRect = $target.getBoundingClientRect();
       targetWidth = targetRect.width;
       targetHeight = targetRect.height;
@@ -73,6 +67,17 @@ injected = injected || (function() {
       stringified = stringified.slice(0, stringified.indexOf('>') + 1).replace(/( xmlns=")(.*?)(")/, '');
       this.$code.innerText = stringified;
       return this.highlight();
+    };
+
+    TinyInspect.prototype.destroy = function() {
+      this.$wrap.classList.add('-out');
+      document.removeEventListener('mousemove', this.logg);
+      this.$overlayWrap.outerHTML = '';
+      return setTimeout((function(_this) {
+        return function() {
+          return _this.$wrap.outerHTML = '';
+        };
+      })(this), 600);
     };
 
     TinyInspect.prototype.highlight = function() {
