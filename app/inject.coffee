@@ -4,91 +4,85 @@ injected = injected or do ->
 
   class TinyInspect
     constructor: ->
-      @$cacheEl = document.body
+      @$target = @$cacheEl = document.body
 
     createNodes: ->
-      do appendOverlay = =>
-        overlayTemplate = "
-          <div class='tl-overlayWrap'>
-            <div class='tl-overlayW'></div>
-            <div class='tl-overlayH'></div>
-            <div class='tl-overlay'></div>
+
+      template = "
+        <div class='tl-wrap'>
+          <div class='tl-overlayV'></div>
+          <div class='tl-overlayH'></div>
+          <div class='tl-overlay'></div>
+          <div class='tl-codeWrap'>
+            <code class='tl-code language-markup'>&lt;html&gt;</code>
           </div>
-          "
-        $overlayFrag = @fragmentFromString overlayTemplate
+        </div>
+        "
 
-        document.body.appendChild $overlayFrag
+      $template = @fragmentFromString template
+      document.body.appendChild $template
 
-      do appendLogger = =>
-        logTemplate = "
-          <div class='tl-loggerWrap'>
-            <code class='language-markup'>&lt;html&gt;</code>
-          </div>
-          "
-        $logFrag = @fragmentFromString logTemplate
-
-        document.body.appendChild $logFrag
-
-
-      @$overlayWrap = document.querySelector '.tl-overlayWrap'
-      @$overlayW = document.querySelector '.tl-overlayW'
-      @$overlayH = document.querySelector '.tl-overlayH'
+      @$wrap = document.querySelector '.tl-wrap'
       @$overlay = document.querySelector '.tl-overlay'
-      @$wrap = document.querySelector '.tl-loggerWrap'
-      @$code = document.querySelector '.tl-loggerWrap code'
+      @$overlayV = document.querySelector '.tl-overlayV'
+      @$overlayH = document.querySelector '.tl-overlayH'
+      @$code = document.querySelector '.tl-code'
+
+      @highlight()
 
     registerEvents: ->
-      @highlight()
       document.addEventListener 'mousemove', @logg
 
     logg: (e)=>
-      $target = e.target
-      return if @$cacheEl is $target
-      @$cacheEl = $target
+      @$target = e.target
+      return if @$cacheEl is @$target
+      @$cacheEl = @$target
+      @layout()
 
-      targetRect = $target.getBoundingClientRect()
-      targetWidth = targetRect.width
-      targetHeight = targetRect.height
-      targetTop = targetRect.top + window.pageYOffset
-      targetLeft = targetRect.left + window.pageXOffset
-
-      overlayWStyle = "
-        top: #{targetTop}px;
-        height: #{targetHeight}px;
-        "
-
-      overlayHStyle = "
-        top: #{window.pageYOffset}px;
-        left: #{targetLeft}px;
-        width: #{targetWidth}px;
-        "
-
-      overlayStyle = "
-        top: #{targetTop}px;
-        left: #{targetLeft}px;
-        width: #{targetWidth}px;
-        height: #{targetHeight}px;
-        "
-
-      @$overlayW.style.cssText = overlayWStyle
-      @$overlayH.style.cssText = overlayHStyle
-      @$overlay.style.cssText = overlayStyle
-
-      $clone = $target.cloneNode()
+      $clone = @$target.cloneNode()
 
       serializer  = new XMLSerializer()
       stringified = serializer.serializeToString $clone
       stringified = stringified
         .slice 0, stringified.indexOf('>')+1
         .replace /( xmlns=")(.*?)(")/, ''
-
       @$code.innerText = stringified
+
       @highlight()
+
+    layout: ->
+      rect = @$target.getBoundingClientRect()
+      width = rect.width
+      height = rect.height
+      top = rect.top + window.pageYOffset
+      left = rect.left + window.pageXOffset
+
+      overlayVStyle = "
+        top: #{top}px;
+        height: #{height}px;
+        "
+
+      overlayHStyle = "
+        top: #{window.pageYOffset}px;
+        left: #{left}px;
+        width: #{width}px;
+        "
+
+      overlayStyle = "
+        top: #{top}px;
+        left: #{left}px;
+        width: #{width}px;
+        height: #{height}px;
+        "
+
+      @$overlayV.style.cssText = overlayVStyle
+      @$overlayH.style.cssText = overlayHStyle
+      @$overlay.style.cssText = overlayStyle
+
 
     destroy: ->
       @$wrap.classList.add '-out'
       document.removeEventListener 'mousemove', @logg
-      @$overlayWrap.outerHTML = ''
       setTimeout =>
         @$wrap.outerHTML = ''
       , 600

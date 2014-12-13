@@ -9,59 +9,35 @@ injected = injected || (function() {
     function TinyInspect() {
       this.highlight = __bind(this.highlight, this);
       this.logg = __bind(this.logg, this);
-      this.$cacheEl = document.body;
+      this.$target = this.$cacheEl = document.body;
     }
 
     TinyInspect.prototype.createNodes = function() {
-      var appendLogger, appendOverlay;
-      (appendOverlay = (function(_this) {
-        return function() {
-          var $overlayFrag, overlayTemplate;
-          overlayTemplate = "<div class='tl-overlayWrap'> <div class='tl-overlayW'></div> <div class='tl-overlayH'></div> <div class='tl-overlay'></div> </div>";
-          $overlayFrag = _this.fragmentFromString(overlayTemplate);
-          return document.body.appendChild($overlayFrag);
-        };
-      })(this))();
-      (appendLogger = (function(_this) {
-        return function() {
-          var $logFrag, logTemplate;
-          logTemplate = "<div class='tl-loggerWrap'> <code class='language-markup'>&lt;html&gt;</code> </div>";
-          $logFrag = _this.fragmentFromString(logTemplate);
-          return document.body.appendChild($logFrag);
-        };
-      })(this))();
-      this.$overlayWrap = document.querySelector('.tl-overlayWrap');
-      this.$overlayW = document.querySelector('.tl-overlayW');
-      this.$overlayH = document.querySelector('.tl-overlayH');
+      var $template, template;
+      template = "<div class='tl-wrap'> <div class='tl-overlayV'></div> <div class='tl-overlayH'></div> <div class='tl-overlay'></div> <div class='tl-codeWrap'> <code class='tl-code language-markup'>&lt;html&gt;</code> </div> </div>";
+      $template = this.fragmentFromString(template);
+      document.body.appendChild($template);
+      this.$wrap = document.querySelector('.tl-wrap');
       this.$overlay = document.querySelector('.tl-overlay');
-      this.$wrap = document.querySelector('.tl-loggerWrap');
-      return this.$code = document.querySelector('.tl-loggerWrap code');
+      this.$overlayV = document.querySelector('.tl-overlayV');
+      this.$overlayH = document.querySelector('.tl-overlayH');
+      this.$code = document.querySelector('.tl-code');
+      return this.highlight();
     };
 
     TinyInspect.prototype.registerEvents = function() {
-      this.highlight();
       return document.addEventListener('mousemove', this.logg);
     };
 
     TinyInspect.prototype.logg = function(e) {
-      var $clone, $target, overlayHStyle, overlayStyle, overlayWStyle, serializer, stringified, targetHeight, targetLeft, targetRect, targetTop, targetWidth;
-      $target = e.target;
-      if (this.$cacheEl === $target) {
+      var $clone, serializer, stringified;
+      this.$target = e.target;
+      if (this.$cacheEl === this.$target) {
         return;
       }
-      this.$cacheEl = $target;
-      targetRect = $target.getBoundingClientRect();
-      targetWidth = targetRect.width;
-      targetHeight = targetRect.height;
-      targetTop = targetRect.top + window.pageYOffset;
-      targetLeft = targetRect.left + window.pageXOffset;
-      overlayWStyle = "top: " + targetTop + "px; height: " + targetHeight + "px;";
-      overlayHStyle = "top: " + window.pageYOffset + "px; left: " + targetLeft + "px; width: " + targetWidth + "px;";
-      overlayStyle = "top: " + targetTop + "px; left: " + targetLeft + "px; width: " + targetWidth + "px; height: " + targetHeight + "px;";
-      this.$overlayW.style.cssText = overlayWStyle;
-      this.$overlayH.style.cssText = overlayHStyle;
-      this.$overlay.style.cssText = overlayStyle;
-      $clone = $target.cloneNode();
+      this.$cacheEl = this.$target;
+      this.layout();
+      $clone = this.$target.cloneNode();
       serializer = new XMLSerializer();
       stringified = serializer.serializeToString($clone);
       stringified = stringified.slice(0, stringified.indexOf('>') + 1).replace(/( xmlns=")(.*?)(")/, '');
@@ -69,10 +45,24 @@ injected = injected || (function() {
       return this.highlight();
     };
 
+    TinyInspect.prototype.layout = function() {
+      var height, left, overlayHStyle, overlayStyle, overlayVStyle, rect, top, width;
+      rect = this.$target.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      top = rect.top + window.pageYOffset;
+      left = rect.left + window.pageXOffset;
+      overlayVStyle = "top: " + top + "px; height: " + height + "px;";
+      overlayHStyle = "top: " + window.pageYOffset + "px; left: " + left + "px; width: " + width + "px;";
+      overlayStyle = "top: " + top + "px; left: " + left + "px; width: " + width + "px; height: " + height + "px;";
+      this.$overlayV.style.cssText = overlayVStyle;
+      this.$overlayH.style.cssText = overlayHStyle;
+      return this.$overlay.style.cssText = overlayStyle;
+    };
+
     TinyInspect.prototype.destroy = function() {
       this.$wrap.classList.add('-out');
       document.removeEventListener('mousemove', this.logg);
-      this.$overlayWrap.outerHTML = '';
       return setTimeout((function(_this) {
         return function() {
           return _this.$wrap.outerHTML = '';

@@ -1,65 +1,70 @@
-.tl-loggerWrap {
+.tl-wrap {
+  pointer-events: none;
+}
+
+.tl-wrap.-out .tl-codeWrap {
+  -webkit-animation: .5s tl-hide forwards;
+  animation: .5s tl-hide forwards;
+}
+
+.tl-wrap.-out .tl-overlay,
+.tl-wrap.-out .tl-overlayV,
+.tl-wrap.-out .tl-overlayH {
+  transition: opacity .3s;
+  opacity: 0;
+}
+
+.tl-codeWrap {
   position: fixed;
-  right: 0;
   top: 0;
   left: 0;
+  right: 0;
   z-index: 10000;
-  font-size: 13px !important;
-  text-align: left !important;
-  pointer-events: none;
-  margin: 0 !important;
-  padding: 4px 6px !important;
+  padding: 4px !important;
   border: none !important;
   -webkit-animation: .4s tl-show forwards;
   animation: .4s tl-show forwards;
 }
 
-.tl-loggerWrap:before,
-.tl-loggerWrap:after {
+.tl-codeWrap:before,
+.tl-codeWrap:after {
   content: none;
 }
 
-.tl-loggerWrap.-out {
-  -webkit-animation: 0.5s tl-hide forwards;
-  animation: 0.5s tl-hide forwards;
-}
-
-.tl-loggerWrap code {
+.tl-code {
   display: inline-block !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
-  background: rgba(245,242,240,0.95) !important;
-  padding: 2px 5px 0 !important;
-  box-shadow: 0 0 2px rgba(0,0,0,0.35) !important;
+  background: #e6e9f0 !important;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.12) !important;
   text-shadow: none !important;
   text-transform: none !important;
   border: none !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+  font-size: 13px !important;
   font-style: normal !important;
   font-weight: normal !important;
+  text-align: left !important;
   line-height: 1 !important;
   font-family: Consolas, Monaco, 'Andale Mono', monospace !important;
   padding: 5px 6px 4px !important;
+  margin: 0 !important;
   border-radius: 3px !important;
 }
 
-.tl-loggerWrap code:before,
-.tl-loggerWrap code:after {
+.tl-code:before,
+.tl-code:after {
   content: none;
 }
 
-.tl-loggerWrap code:empty {
+.tl-code:empty {
   visibility: hidden;
 }
 
-.tl-overlayWrap {
-  pointer-events: none;
-}
-
 .tl-overlay,
-.tl-overlayW,
+.tl-overlayV,
 .tl-overlayH {
   position: absolute;
   z-index: 10000;
@@ -72,24 +77,18 @@
   background: rgba(73, 187, 231, 0.2);
 }
 
-.tl-overlayW {
+.tl-overlayV {
   right: 0;
-  background: rgba(0,0,0,0.01);
+  background: rgba(0,0,0,0.02);
   border-top: 1px dashed rgba(52,152,219,0.4);
   border-bottom: 1px dashed rgba(52,152,219,0.4);
 }
 
 .tl-overlayH {
   height: 100vh;
-  background: rgba(0,0,0,0.01);
+  background: rgba(0,0,0,0.02);
   border-left: 1px dashed rgba(52,152,219,0.4);
   border-right: 1px dashed rgba(52,152,219,0.4);
-}
-
-@keyframes tl-show {
-  0% {
-    transform: translateY(-100%);
-  }
 }
 
 @-webkit-keyframes tl-show {
@@ -98,6 +97,11 @@
   }
 }
 
+@keyframes tl-show {
+  0% {
+    transform: translateY(-100%);
+  }
+}
 
 @-webkit-keyframes tl-hide {
   45% {
@@ -107,6 +111,7 @@
     transform: translateY(-100%);
   }
 }
+
 @keyframes tl-hide {
   45% {
     transform: translateY(30%);
@@ -126,69 +131,62 @@
  * @author Lea Verou
  */
 
-.tl-loggerWrap .token.comment,
-.tl-loggerWrap .token.prolog,
-.tl-loggerWrap .token.doctype,
-.tl-loggerWrap .token.cdata {
-  color: slategray;
+.tl-codeWrap .token.comment,
+.tl-codeWrap .token.prolog,
+.tl-codeWrap .token.doctype,
+.tl-codeWrap .token.cdata {
+  color: #b9bec9;
 }
 
-.tl-loggerWrap .token.punctuation {
+.tl-codeWrap .token.punctuation {
   color: #999;
 }
 
-.tl-loggerWrap .namespace {
-  opacity: .7;
+.tl-codeWrap .token.property,
+.tl-codeWrap .token.tag,
+.tl-codeWrap .token.boolean,
+.tl-codeWrap .token.number,
+.tl-codeWrap .token.constant,
+.tl-codeWrap .token.symbol,
+.tl-codeWrap .token.deleted {
+  color: #99006f; /* element */
 }
 
-.tl-loggerWrap .token.property,
-.tl-loggerWrap .token.tag,
-.tl-loggerWrap .token.boolean,
-.tl-loggerWrap .token.number,
-.tl-loggerWrap .token.constant,
-.tl-loggerWrap .token.symbol,
-.tl-loggerWrap .token.deleted {
-  color: #905;
+.tl-codeWrap .token.selector,
+.tl-codeWrap .token.attr-name,
+.tl-codeWrap .token.string,
+.tl-codeWrap .token.char,
+.tl-codeWrap .token.builtin,
+.tl-codeWrap .token.inserted {
+  color: #669900; /* attr name */
 }
 
-.tl-loggerWrap .token.selector,
-.tl-loggerWrap .token.attr-name,
-.tl-loggerWrap .token.string,
-.tl-loggerWrap .token.char,
-.tl-loggerWrap .token.builtin,
-.tl-loggerWrap .token.inserted {
-  color: #690;
+.tl-codeWrap .token.atrule,
+.tl-codeWrap .token.attr-value,
+.tl-codeWrap .token.keyword {
+  color: #0077aa; /* attr value */
 }
 
-.tl-loggerWrap .token.operator,
-.tl-loggerWrap .token.entity,
-.tl-loggerWrap .token.url,
-.tl-loggerWrap .language-css .token.string,
-.tl-loggerWrap .style .token.string {
+.tl-codeWrap .token.operator,
+.tl-codeWrap .token.entity,
+.tl-codeWrap .token.url,
+.tl-codeWrap .language-css .token.string,
+.tl-codeWrap .style .token.string {
   color: #a67f59;
   background: hsla(0, 0%, 100%, .5);
 }
 
-.tl-loggerWrap .token.atrule,
-.tl-loggerWrap .token.attr-value,
-.tl-loggerWrap .token.keyword {
-  color: #07a;
-}
-
-.tl-loggerWrap .token.function {
+.tl-codeWrap .token.function {
   color: #DD4A68;
 }
 
-.tl-loggerWrap .token.regex,
-.tl-loggerWrap .token.important,
-.tl-loggerWrap .token.variable {
+.tl-codeWrap .token.regex,
+.tl-codeWrap .token.important,
+.tl-codeWrap .token.variable {
   color: #e90;
 }
 
-.tl-loggerWrap .token.important {
+.tl-codeWrap .token.important {
   font-weight: bold;
 }
 
-.tl-loggerWrap .token.entity {
-  cursor: help;
-}
