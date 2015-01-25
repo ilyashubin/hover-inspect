@@ -67,26 +67,29 @@
 .tl-overlayV,
 .tl-overlayH {
   position: absolute;
-  z-index: 10000;
   top: 0;
   left: 0;
+  z-index: 10000;
+}
+.tl-overlayV,
+.tl-overlayH {
+  background: rgba(0,0,0,0.02);
   box-sizing: border-box;
 }
 
 .tl-overlay {
-  background: rgba(73, 187, 231, 0.2);
+  background: rgba(73, 187, 231, .2);
+  border: 0 solid rgba(255, 0, 220, .1);
 }
 
 .tl-overlayV {
   right: 0;
-  background: rgba(0,0,0,0.02);
   border-top: 1px dashed rgba(52,152,219,0.4);
   border-bottom: 1px dashed rgba(52,152,219,0.4);
 }
 
 .tl-overlayH {
   height: 100vh;
-  background: rgba(0,0,0,0.02);
   border-left: 1px dashed rgba(52,152,219,0.4);
   border-right: 1px dashed rgba(52,152,219,0.4);
 }
