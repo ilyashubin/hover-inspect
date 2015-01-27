@@ -21,14 +21,10 @@
   right: 0;
   z-index: 10000;
   padding: 4px !important;
+  line-height: 1 !important;
   border: none !important;
   -webkit-animation: .4s tl-show forwards;
   animation: .4s tl-show forwards;
-}
-
-.tl-codeWrap:before,
-.tl-codeWrap:after {
-  content: none;
 }
 
 .tl-code {
@@ -47,7 +43,6 @@
   font-style: normal !important;
   font-weight: normal !important;
   text-align: left !important;
-  line-height: 1 !important;
   font-family: Consolas, Monaco, 'Andale Mono', monospace !important;
   padding: 5px 6px 4px !important;
   margin: 0 !important;
@@ -71,15 +66,17 @@
   left: 0;
   z-index: 10000;
 }
+
 .tl-overlayV,
 .tl-overlayH {
-  background: rgba(0,0,0,0.02);
+  background: rgba(0,0,0,0.01);
   box-sizing: border-box;
 }
 
 .tl-overlay {
-  background: rgba(73, 187, 231, .2);
-  border: 0 solid rgba(255, 0, 220, .1);
+  background: rgba(73, 187, 231, .25);
+  border: 0 solid rgba(154, 87, 181,.4);
+  box-sizing: content-box;
 }
 
 .tl-overlayV {
