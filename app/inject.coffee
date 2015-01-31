@@ -59,10 +59,16 @@ injected = injected or do ->
         top: rect.top + window.pageYOffset
         left: rect.left + window.pageXOffset
         margin:
-          top: parseInt(computedStyle.marginTop, 10)
-          right: parseInt(computedStyle.marginRight, 10)
-          bottom: parseInt(computedStyle.marginBottom, 10)
-          left: parseInt(computedStyle.marginLeft, 10)
+          top: computedStyle.marginTop
+          right: computedStyle.marginRight
+          bottom: computedStyle.marginBottom
+          left: computedStyle.marginLeft
+
+      # pluck negative margins
+      for key, val of box.margin
+        val = parseInt val, 10
+        box.margin[key] = if val > 0 then val else 0
+        
 
       overlayVStyle = "
         top: #{box.top}px;

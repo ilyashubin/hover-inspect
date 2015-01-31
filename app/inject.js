@@ -46,7 +46,7 @@ injected = injected || (function() {
     };
 
     TinyInspect.prototype.layout = function() {
-      var box, computedStyle, overlayHStyle, overlayStyle, overlayVStyle, rect;
+      var box, computedStyle, key, overlayHStyle, overlayStyle, overlayVStyle, rect, val, _ref;
       rect = this.$target.getBoundingClientRect();
       computedStyle = window.getComputedStyle(this.$target);
       box = {
@@ -55,12 +55,18 @@ injected = injected || (function() {
         top: rect.top + window.pageYOffset,
         left: rect.left + window.pageXOffset,
         margin: {
-          top: parseInt(computedStyle.marginTop, 10),
-          right: parseInt(computedStyle.marginRight, 10),
-          bottom: parseInt(computedStyle.marginBottom, 10),
-          left: parseInt(computedStyle.marginLeft, 10)
+          top: computedStyle.marginTop,
+          right: computedStyle.marginRight,
+          bottom: computedStyle.marginBottom,
+          left: computedStyle.marginLeft
         }
       };
+      _ref = box.margin;
+      for (key in _ref) {
+        val = _ref[key];
+        val = parseInt(val, 10);
+        box.margin[key] = val > 0 ? val : 0;
+      }
       overlayVStyle = "top: " + box.top + "px; height: " + box.height + "px;";
       overlayHStyle = "top: " + window.pageYOffset + "px; left: " + box.left + "px; width: " + box.width + "px;";
       overlayStyle = "top: " + (box.top - box.margin.top) + "px; left: " + (box.left - box.margin.left) + "px; width: " + box.width + "px; height: " + box.height + "px; border-width: " + box.margin.top + "px " + box.margin.right + "px " + box.margin.bottom + "px " + box.margin.left + "px;";
