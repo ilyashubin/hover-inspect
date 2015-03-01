@@ -19,7 +19,7 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100000;
+  z-index: 10000001;
   padding: 4px !important;
   line-height: 1 !important;
   text-align: left !important;
