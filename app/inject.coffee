@@ -1,3 +1,6 @@
+# Hover inspect extension for Chrome
+# https://github.com/NV0/hover-inspect
+
 injected = injected or do ->
  
   enabled = false
@@ -5,6 +8,7 @@ injected = injected or do ->
   class TinyInspect
     constructor: ->
       @$target = @$cacheEl = document.body
+      @serializer = new XMLSerializer()
 
     createNodes: ->
 
@@ -41,8 +45,7 @@ injected = injected or do ->
 
       $clone = @$target.cloneNode()
 
-      serializer  = new XMLSerializer()
-      stringified = serializer.serializeToString $clone
+      stringified = @serializer.serializeToString $clone
       stringified = stringified
         .slice 0, stringified.indexOf('>')+1
         .replace /( xmlns=")(.*?)(")/, ''
@@ -67,32 +70,26 @@ injected = injected or do ->
       # pluck negative margins
       for key, val of box.margin
         val = parseInt val, 10
-        box.margin[key] = if val > 0 then val else 0
-        
+        box.margin[key] = Math.max val, 0
 
-      overlayVStyle = "
+      @$overlayV.style.cssText = "
         top: #{box.top}px;
         height: #{box.height}px;
         "
 
-      overlayHStyle = "
+      @$overlayH.style.cssText = "
         top: #{window.pageYOffset}px;
         left: #{box.left}px;
         width: #{box.width}px;
         "
 
-      overlayStyle = "
+      @$overlay.style.cssText = "
         top: #{box.top - box.margin.top}px;
         left: #{box.left - box.margin.left}px;
         width: #{box.width}px;
         height: #{box.height}px;
         border-width: #{box.margin.top}px #{box.margin.right}px #{box.margin.bottom}px #{box.margin.left}px;
         "
-
-      @$overlayV.style.cssText = overlayVStyle
-      @$overlayH.style.cssText = overlayHStyle
-      @$overlay.style.cssText = overlayStyle
-
 
     destroy: ->
       @$wrap.classList.add '-out'

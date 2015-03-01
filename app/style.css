@@ -19,9 +19,10 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 10000;
+  z-index: 100000;
   padding: 4px !important;
   line-height: 1 !important;
+  text-align: left !important;
   border: none !important;
   -webkit-animation: .4s tl-show forwards;
   animation: .4s tl-show forwards;
@@ -75,7 +76,7 @@
 
 .tl-overlay {
   background: rgba(73, 187, 231, .25);
-  border: 0 solid rgba(154, 87, 181,.4);
+  border: 0 solid rgba(154, 87, 181,.3);
   box-sizing: content-box;
 }
 

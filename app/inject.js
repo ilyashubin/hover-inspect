@@ -10,6 +10,7 @@ injected = injected || (function() {
       this.highlight = __bind(this.highlight, this);
       this.logg = __bind(this.logg, this);
       this.$target = this.$cacheEl = document.body;
+      this.serializer = new XMLSerializer();
     }
 
     TinyInspect.prototype.createNodes = function() {
@@ -30,7 +31,7 @@ injected = injected || (function() {
     };
 
     TinyInspect.prototype.logg = function(e) {
-      var $clone, serializer, stringified;
+      var $clone, stringified;
       this.$target = e.target;
       if (this.$cacheEl === this.$target) {
         return;
@@ -38,15 +39,14 @@ injected = injected || (function() {
       this.$cacheEl = this.$target;
       this.layout();
       $clone = this.$target.cloneNode();
-      serializer = new XMLSerializer();
-      stringified = serializer.serializeToString($clone);
+      stringified = this.serializer.serializeToString($clone);
       stringified = stringified.slice(0, stringified.indexOf('>') + 1).replace(/( xmlns=")(.*?)(")/, '');
       this.$code.innerText = stringified;
       return this.highlight();
     };
 
     TinyInspect.prototype.layout = function() {
-      var box, computedStyle, key, overlayHStyle, overlayStyle, overlayVStyle, rect, val, _ref;
+      var box, computedStyle, key, rect, val, _ref;
       rect = this.$target.getBoundingClientRect();
       computedStyle = window.getComputedStyle(this.$target);
       box = {
@@ -65,14 +65,11 @@ injected = injected || (function() {
       for (key in _ref) {
         val = _ref[key];
         val = parseInt(val, 10);
-        box.margin[key] = val > 0 ? val : 0;
+        box.margin[key] = Math.max(val, 0);
       }
-      overlayVStyle = "top: " + box.top + "px; height: " + box.height + "px;";
-      overlayHStyle = "top: " + window.pageYOffset + "px; left: " + box.left + "px; width: " + box.width + "px;";
-      overlayStyle = "top: " + (box.top - box.margin.top) + "px; left: " + (box.left - box.margin.left) + "px; width: " + box.width + "px; height: " + box.height + "px; border-width: " + box.margin.top + "px " + box.margin.right + "px " + box.margin.bottom + "px " + box.margin.left + "px;";
-      this.$overlayV.style.cssText = overlayVStyle;
-      this.$overlayH.style.cssText = overlayHStyle;
-      return this.$overlay.style.cssText = overlayStyle;
+      this.$overlayV.style.cssText = "top: " + box.top + "px; height: " + box.height + "px;";
+      this.$overlayH.style.cssText = "top: " + window.pageYOffset + "px; left: " + box.left + "px; width: " + box.width + "px;";
+      return this.$overlay.style.cssText = "top: " + (box.top - box.margin.top) + "px; left: " + (box.left - box.margin.left) + "px; width: " + box.width + "px; height: " + box.height + "px; border-width: " + box.margin.top + "px " + box.margin.right + "px " + box.margin.bottom + "px " + box.margin.left + "px;";
     };
 
     TinyInspect.prototype.destroy = function() {
