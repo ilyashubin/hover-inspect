@@ -3,9 +3,7 @@
 
 injected = injected or do ->
  
-  enabled = false
-
-  class TinyInspect
+  class HoverInspect
     constructor: ->
       @$target = @$cacheEl = document.body
       @serializer = new XMLSerializer()
@@ -91,13 +89,6 @@ injected = injected or do ->
         border-width: #{box.margin.top}px #{box.margin.right}px #{box.margin.bottom}px #{box.margin.left}px;
         "
 
-    destroy: ->
-      @$wrap.classList.add '-out'
-      document.removeEventListener 'mousemove', @logg
-      setTimeout =>
-        @$wrap.outerHTML = ''
-      , 600
-
     highlight: =>
       Prism.highlightElement @$code
 
@@ -106,17 +97,26 @@ injected = injected or do ->
       temp.innerHTML = strHTML
       return temp.content
 
+    deactivate: ->
+      @$wrap.classList.add '-out'
+      document.removeEventListener 'mousemove', @logg
+      setTimeout =>
+        @$wrap.outerHTML = ''
+      , 600
+
+    activate: ->
+      @createNodes()
+      @registerEvents()
 
 
-  inspector = new TinyInspect()
+
+  hi = new HoverInspect()
 
   chrome.runtime.onMessage.addListener (request, sender, sendResponse)->
-    enabled = !enabled
-    if enabled
-      inspector.createNodes()
-      inspector.registerEvents()
+    if request.action == 'activate'
+      hi.activate()
     else
-      inspector.destroy()
+      hi.deactivate()
 
   return true
 

@@ -3,17 +3,16 @@ var injected,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 injected = injected || (function() {
-  var TinyInspect, enabled, inspector;
-  enabled = false;
-  TinyInspect = (function() {
-    function TinyInspect() {
+  var HoverInspect, hi;
+  HoverInspect = (function() {
+    function HoverInspect() {
       this.highlight = __bind(this.highlight, this);
       this.logg = __bind(this.logg, this);
       this.$target = this.$cacheEl = document.body;
       this.serializer = new XMLSerializer();
     }
 
-    TinyInspect.prototype.createNodes = function() {
+    HoverInspect.prototype.createNodes = function() {
       var $template, template;
       template = "<div class='tl-wrap'> <div class='tl-overlayV'></div> <div class='tl-overlayH'></div> <div class='tl-overlay'></div> <div class='tl-codeWrap'> <code class='tl-code language-markup'>&lt;html&gt;</code> </div> </div>";
       $template = this.fragmentFromString(template);
@@ -26,11 +25,11 @@ injected = injected || (function() {
       return this.highlight();
     };
 
-    TinyInspect.prototype.registerEvents = function() {
+    HoverInspect.prototype.registerEvents = function() {
       return document.addEventListener('mousemove', this.logg);
     };
 
-    TinyInspect.prototype.logg = function(e) {
+    HoverInspect.prototype.logg = function(e) {
       var $clone, stringified;
       this.$target = e.target;
       if (this.$cacheEl === this.$target) {
@@ -45,7 +44,7 @@ injected = injected || (function() {
       return this.highlight();
     };
 
-    TinyInspect.prototype.layout = function() {
+    HoverInspect.prototype.layout = function() {
       var box, computedStyle, key, rect, val, _ref;
       rect = this.$target.getBoundingClientRect();
       computedStyle = window.getComputedStyle(this.$target);
@@ -72,7 +71,18 @@ injected = injected || (function() {
       return this.$overlay.style.cssText = "top: " + (box.top - box.margin.top) + "px; left: " + (box.left - box.margin.left) + "px; width: " + box.width + "px; height: " + box.height + "px; border-width: " + box.margin.top + "px " + box.margin.right + "px " + box.margin.bottom + "px " + box.margin.left + "px;";
     };
 
-    TinyInspect.prototype.destroy = function() {
+    HoverInspect.prototype.highlight = function() {
+      return Prism.highlightElement(this.$code);
+    };
+
+    HoverInspect.prototype.fragmentFromString = function(strHTML) {
+      var temp;
+      temp = document.createElement('template');
+      temp.innerHTML = strHTML;
+      return temp.content;
+    };
+
+    HoverInspect.prototype.deactivate = function() {
       this.$wrap.classList.add('-out');
       document.removeEventListener('mousemove', this.logg);
       return setTimeout((function(_this) {
@@ -82,28 +92,20 @@ injected = injected || (function() {
       })(this), 600);
     };
 
-    TinyInspect.prototype.highlight = function() {
-      return Prism.highlightElement(this.$code);
+    HoverInspect.prototype.activate = function() {
+      this.createNodes();
+      return this.registerEvents();
     };
 
-    TinyInspect.prototype.fragmentFromString = function(strHTML) {
-      var temp;
-      temp = document.createElement('template');
-      temp.innerHTML = strHTML;
-      return temp.content;
-    };
-
-    return TinyInspect;
+    return HoverInspect;
 
   })();
-  inspector = new TinyInspect();
+  hi = new HoverInspect();
   chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    enabled = !enabled;
-    if (enabled) {
-      inspector.createNodes();
-      return inspector.registerEvents();
+    if (request.action === 'activate') {
+      return hi.activate();
     } else {
-      return inspector.destroy();
+      return hi.deactivate();
     }
   });
   return true;

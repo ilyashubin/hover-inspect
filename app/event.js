@@ -3,16 +3,52 @@
 
 (function(){
 
-	function handleInjection(tab) {
-		chrome.tabs.insertCSS(tab.id, {file: 'style.css'});
-		chrome.tabs.executeScript(tab.id, {file: 'prism.js'});
+	var tabs = {};
 
-		chrome.tabs.executeScript(tab.id, {file: 'inject.js'}, function() {
-			chrome.tabs.sendMessage(tab.id, {});
-		});
+	function toggle(tab){
+		if (!tabs[tab.id]) {
+			tabs[tab.id] = Object.create(inspect);
+			tabs[tab.id].activate(tab.id);
+		} else {
+			tabs[tab.id].deactivate();
+			for (var tabId in tabs){
+				if (tabId == tab.id) delete tabs[tabId];
+			}
+		}
 	}
 
-	chrome.browserAction.onClicked.addListener(handleInjection);
+	var inspect = {
+		activate: function(id) {
+			this.id = id;
+
+			chrome.tabs.executeScript(this.id, { file: 'prism.js' });	
+			chrome.tabs.insertCSS(this.id, { file: 'hoverinspect.css' });
+			chrome.tabs.executeScript(this.id, { file: 'hoverinspect.js' }, function() {
+				chrome.tabs.sendMessage(this.id, { action: 'activate' });
+			}.bind(this));
+
+			chrome.browserAction.setIcon({ 
+				tabId: this.id,
+				path: {
+					19: "icon_active.png"
+				}
+			});
+		},
+
+		deactivate: function(id) {
+			chrome.tabs.sendMessage(this.id, { action: 'deactivate' });
+
+			chrome.browserAction.setIcon({ 
+				tabId: this.id,
+				path: {
+					19: "icon.png"
+				}
+			});
+		}
+
+	}
+
+	chrome.browserAction.onClicked.addListener(toggle);
 
 })();
 
