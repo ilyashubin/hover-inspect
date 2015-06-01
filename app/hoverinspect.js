@@ -229,7 +229,6 @@ var injected = injected || (function() {
 		},
 
 		deactivate: function() {
-			console.log('deact')
 			this.$wrap.classList.add('-out');
 			document.removeEventListener('mousemove', this.log);
 			setTimeout(function() {

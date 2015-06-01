@@ -2,8 +2,8 @@
 	"manifest_version": 2,
 
 	"name": "Hover Inspect",
-	"version": "1.1",
-	"description": "The quickest way to inspect page elements",
+	"version": "2.0.0",
+	"description": "Blazing fast page layout inspection",
 	"author": "Shubin Ilya",
 
 	"browser_action": {
