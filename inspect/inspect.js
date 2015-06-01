@@ -14,7 +14,8 @@ var injected = injected || (function() {
 	Inspector.prototype = {
 
 		getNodes: function() {
-			var path = chrome.extension.getURL("template.html");
+			// var path = chrome.extension.getURL("template.html");
+			var path = 'template.html';
 
 			var xmlhttp = new XMLHttpRequest();
 
@@ -242,14 +243,15 @@ var injected = injected || (function() {
 	};
 
 	var hi = new Inspector();
+	hi.activate();
 
-	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-		if (request.action === 'activate') {
-			return hi.activate();
-		} else {
-			return hi.deactivate();
-		}
-	});
+	// chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	// 	if (request.action === 'activate') {
+	// 		return hi.activate();
+	// 	} else {
+	// 		return hi.deactivate();
+	// 	}
+	// });
 
 	return true;
 })();
