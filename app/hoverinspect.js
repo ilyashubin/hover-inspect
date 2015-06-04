@@ -75,26 +75,29 @@ var injected = injected || (function() {
 
 		convertToShortFormat: function(string, delimiter) {
 			if (!string.length) return '';
-			var arr = string.split(' ');
+			var arr = string.split(' '),
+				output;
+
 			if (arr.length > 5) {
-				return delimiter.concat(arr.slice(0,5).join(delimiter), '...');
+				output = delimiter.concat(arr.slice(0,5).join(delimiter), '...');
+			} else {
+				output = delimiter.concat(string.replace(/ /g, delimiter));
 			}
-			return delimiter.concat(string.replace(/ /g, delimiter));
+			return output;
 		},
 
 		log: function(e) {
 
 			this.$target = e.target;
-			this.stringified = this.serializer.serializeToString(this.$target.cloneNode());
+			this.stringified = this.serializer.serializeToString(this.$target);
+
+
+			var  forbiddenElements = [this.$cacheEl, document.body, document.documentElement];
+			for (var i = 0; i < forbiddenElements.length; i++) {
+				if (this.$target === forbiddenElements[i]) return;
+			}
 
 			this.logMain();
-
-			var noNeedToInspect = [this.$cacheEl, document.body, document.documentElement]
-				.some(function(el) {
-					return this.$target === el;
-				}.bind(this));
-
-			if (noNeedToInspect) return;
 
 			this.$cacheEl = this.$target;
 			this.layout();
@@ -104,7 +107,7 @@ var injected = injected || (function() {
 		},
 
 		logMain: function() {
-			if (this.$cacheElMain === this.$target) return
+			if (this.$cacheElMain === this.$target) return;
 			this.$cacheElMain = this.$target;
 
 			var fullCode = this.stringified
@@ -123,27 +126,23 @@ var injected = injected || (function() {
 
 		logTooltip: function() {
 
-			var codeSnippet = this.stringified,
-				tt = this.$tooltip;
+			var tt = this.$tooltip;
 
-			var elementName = codeSnippet.slice(1).split('>')[0].split(' ')[0];
-
-			var extractedClasses = / class="(.*?)"/.exec(codeSnippet),
-				extractedIds = / id="(.*?)"/.exec(codeSnippet);
-
-			var classNames = (extractedClasses) ? this.convertToShortFormat(
-					extractedClasses[1], '.') : null,
-				idNames = (extractedIds) ? this.convertToShortFormat(extractedIds[1],
-					'#') : null;
+			var elementName = this.$target.tagName,
+				classes = this.convertToShortFormat(this.$target.className, '.'),
+				ids = this.convertToShortFormat(this.$target.id, '#');
 
 			// set tooltip code
-			tt.elementName.innerText = elementName;
-			tt.classes.innerText = classNames;
-			tt.ids.innerText = idNames;
+			tt.elementName.innerText = elementName.toLowerCase();
+			tt.classes.innerText = classes;
+			tt.ids.innerText = ids;
 			tt.size.innerHTML = Math.floor(this.box.width) + ' x ' + Math.floor(this.box.height);
 
-			var tooltipOverflowing = tt.main.getBoundingClientRect().right > window.innerWidth;
-			tt.main.classList[tooltipOverflowing ? 'add' : 'remove']('tl-tooltip--right');
+			tt.main.classList.remove('tl-tooltip--right');
+			var tooltipOverflowing = tt.main.getBoundingClientRect().right > document.documentElement.clientWidth;
+			if (tooltipOverflowing) {
+				tt.main.classList.add('tl-tooltip--right');
+			}
 		},
 
 		// redraw overlay

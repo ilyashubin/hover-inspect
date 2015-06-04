@@ -1,5 +1,7 @@
-// Hover inspect extension for Chrome
-// https://github.com/NV0/hover-inspect
+/*
+*  Hover inspect extension for Chrome
+*  https://github.com/NV0/hover-inspect
+*/
 
 (function() {
 
@@ -8,6 +10,7 @@
 
 	var inspect = {
 		activate: function(id) {
+			console.log('act');
 			this.id = id;
 
 			chrome.tabs.executeScript(this.id, {
@@ -30,6 +33,7 @@
 		},
 
 		deactivate: function() {
+			console.log('deact');
 			chrome.tabs.sendMessage(this.id, {
 				action: 'deactivate'
 			});
@@ -45,6 +49,7 @@
 	};
 
 	function toggle(tab) {
+
 		if (!tabs[tab.id]) {
 			tabs[tab.id] = Object.create(inspect);
 			tabs[tab.id].activate(tab.id);
@@ -57,5 +62,10 @@
 	}
 
 	chrome.browserAction.onClicked.addListener(toggle);
+	chrome.runtime.onSuspend.addListener(function() {
+		for (var tabId in tabs) {
+			tabs[tabId].deactivate();
+		}
+	});
 
 })();
