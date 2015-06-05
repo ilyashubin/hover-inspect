@@ -17,8 +17,7 @@
 	},
 
 	"background": {
-		"scripts": ["event.js"],
-		"persistent": false
+		"scripts": ["event.js"]
 	},
 
 	"permissions": ["activeTab"],

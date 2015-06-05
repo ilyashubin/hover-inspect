@@ -10,7 +10,7 @@
 
 	var inspect = {
 		activate: function(id) {
-			console.log('act');
+
 			this.id = id;
 
 			chrome.tabs.executeScript(this.id, {
@@ -33,7 +33,7 @@
 		},
 
 		deactivate: function() {
-			console.log('deact');
+
 			chrome.tabs.sendMessage(this.id, {
 				action: 'deactivate'
 			});
@@ -62,10 +62,5 @@
 	}
 
 	chrome.browserAction.onClicked.addListener(toggle);
-	chrome.runtime.onSuspend.addListener(function() {
-		for (var tabId in tabs) {
-			tabs[tabId].deactivate();
-		}
-	});
 
 })();

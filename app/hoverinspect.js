@@ -1,14 +1,37 @@
 
 var injected = injected || (function() {
 
+	// helper functions
+
+	var debounce = function(func, wait) {
+		var timeout;
+		return function() {
+			var context = this,
+				args = arguments;
+			var later = function() {
+				timeout = null;
+				func.apply(context, args);
+			};
+
+			clearTimeout(timeout);
+			timeout = setTimeout(later, wait);
+			if (!timeout) func.apply(context, args);
+		};
+	}
+
+	// Inspector constructor
+
 	var Inspector = function() {
 		this.highlight = this.highlight.bind(this);
 		this.log = this.log.bind(this);
-		this.logMain = this.debounce(this.logMain.bind(this), 450);
+		this.logMain = debounce(this.logMain.bind(this), 450);
+
 		this.$target = document.body;
 		this.$cacheEl = document.body;
 		this.$cacheElMain = document.body;
+
 		this.serializer = new XMLSerializer();
+		this.forbidden = [this.$cacheEl, document.body, document.documentElement];
 	};
 
 	Inspector.prototype = {
@@ -79,9 +102,9 @@ var injected = injected || (function() {
 				output;
 
 			if (arr.length > 5) {
-				output = delimiter.concat(arr.slice(0,5).join(delimiter), '...');
+				output = delimiter + arr.slice(0,5).join(delimiter) + '...';
 			} else {
-				output = delimiter.concat(string.replace(/ /g, delimiter));
+				output = delimiter + string.replace(/ /g, delimiter);
 			}
 			return output;
 		},
@@ -89,13 +112,12 @@ var injected = injected || (function() {
 		log: function(e) {
 
 			this.$target = e.target;
+
+			// check if element cached
+			if (this.forbidden.indexOf(this.$target) !== -1) return;
+
 			this.stringified = this.serializer.serializeToString(this.$target);
 
-
-			var  forbiddenElements = [this.$cacheEl, document.body, document.documentElement];
-			for (var i = 0; i < forbiddenElements.length; i++) {
-				if (this.$target === forbiddenElements[i]) return;
-			}
 
 			this.logMain();
 
@@ -203,28 +225,8 @@ var injected = injected || (function() {
 			Prism.highlightElement(this.$code);
 		},
 
-		// create DOM element from string
-		fragmentFromString: function(strHTML) {
-			var temp = document.createElement('template');
-			temp.innerHTML = strHTML;
-			return temp.content;
-		},
-
-		// debounce
-		debounce: function(func, wait) {
-			var timeout;
-			return function() {
-				var context = this,
-					args = arguments;
-				var later = function() {
-					timeout = null;
-					func.apply(context, args);
-				};
-
-				clearTimeout(timeout);
-				timeout = setTimeout(later, wait);
-				if (!timeout) func.apply(context, args);
-			};
+		activate: function() {
+			this.getNodes();
 		},
 
 		deactivate: function() {
@@ -233,11 +235,7 @@ var injected = injected || (function() {
 			setTimeout(function() {
 				document.body.removeChild(this.$host);
 			}.bind(this), 600);
-		},
-
-		activate: function() {
-			this.getNodes();
-		},
+		}
 	};
 
 	var hi = new Inspector();
