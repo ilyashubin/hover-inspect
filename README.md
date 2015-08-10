@@ -12,7 +12,7 @@ It uses [Prism](http://prismjs.com/) for color highlighting.
 
 ## Installation
 Packed extension:
-[Packed version](https://github.com/NV0/hover-inspect/releases/download/v2/hover-inspect.crx) <br>
+[Packed version](https://github.com/NV0/hover-inspect/releases/download/v2.1/hover-inspect.crx.zip) <br>
 You can also install it manually: [Manual installation instructions](http://lifehacker.com/5919997/how-to-install-extensions-that-arent-from-the-official-chrome-web-store)
 
 ## Tips
