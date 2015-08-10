@@ -1,275 +1,166 @@
 <template class='tl-template'>
-   <style>
-      .tl-wrap {
-        pointer-events: none;
-      }
-      .tl-wrap.-out .tl-codeWrap {
-        -webkit-animation: 0.5s tl-hide forwards !important;
-                animation: 0.5s tl-hide forwards !important;
-      }
-      .tl-wrap.-out .tl-overlay-main,
-      .tl-wrap.-out .tl-overlay-vertical,
-      .tl-wrap.-out .tl-overlay-horizontal {
-        transition: opacity 0.3s;
-        opacity: 0;
-      }
-      .tl-codeWrap {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 10000001;
-        padding: 4px;
-        -webkit-animation: 0.4s tl-show forwards;
-                animation: 0.4s tl-show forwards;
-      }
-      .tl-code {
-        display: inline-block;
-        max-width: 100%;
-        box-sizing: border-box;
-        background: #fff;
-        box-shadow: 0 0 0 1px #eee;
-        font-family: Consolas, Monaco, 'Andale Mono', monospace;
-        font-size: 13px;
-        font-weight: 400;
-        color: #aaa;
-        padding: 5px 6px 4px;
-        border-radius: 3px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        -webkit-animation-duration: 0.5s;
-                animation-duration: 0.5s;
-        -webkit-animation-fill-mode: both;
-                animation-fill-mode: both;
-      }
-      .tl-tooltip {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        margin: 2px;
-        background: #fff;
-        font-family: Consolas, Monaco, 'Andale Mono', monospace;
-        font-size: 13px;
-        font-weight: 400;
-        color: #eee;
-        box-shadow: 0 0 0 1px #eee, 0 2px 10px rgba(0,0,0,0.15);
-        border-radius: 3px;
-        padding: 4px 6px 3px;
-        white-space: nowrap;
-      }
-      .tl-tooltip:before {
-        content: '';
-        position: absolute;
-        left: 5px;
-        top: -4px;
-        width: 10px;
-        height: 10px;
-        background: #fff;
-        border-radius: 2px;
-        -webkit-transform: rotate(45deg);
-                transform: rotate(45deg);
-      }
-      .tl-tooltip--right {
-         left: auto;
-         right: 0;
-      }
-      .tl-tooltip--right:before {
-         left: auto;
-         right: 5px;
-      }
-      .tl-tooltip > span {
-         position: relative;
-         z-index: 10;
-      }
-      .tl-tooltip-size {
-        color: #aaa;
-        font-size: 12px;
-        margin-left: 6px;
-        padding-left: 6px;
-        word-spacing: -5px;
-      }
-      .tl-tooltip-size:before {
-        content: '';
-        position: absolute;
-        top: -1px;
-        bottom: 0;
-        left: 0;
-        width: 1px;
-        background: #eee;
-      }
-      .tl-tooltip-classes:not(:empty),
-      .tl-tooltip-ids:not(:empty) {
-        margin-left: 2px;
-      }
-      .tl-tooltip-classes {
-        color: #52b2e5;
-      }
-      .tl-tooltip-ids {
-        color: #7ebd00;
-      }
-      .tl-tooltip-elementName {
-        color: #d259ff;
-      }
-      .tl-overlay-main,
-      .tl-overlay-vertical,
-      .tl-overlay-horizontal {
-        position: absolute;
-        top: -5px;
-        left: -5px;
-        z-index: 10000;
-      }
-      .tl-overlay-vertical,
-      .tl-overlay-horizontal {
-        background: rgba(0,0,0,0.01);
-        box-sizing: border-box;
-      }
-      .tl-overlay-vertical {
-        right: 0;
-        border-top: 1px dashed rgba(52,152,219,0.4);
-        border-bottom: 1px dashed rgba(52,152,219,0.4);
-      }
-      .tl-overlay-horizontal {
-        height: 100vh;
-        border-left: 1px dashed rgba(52,152,219,0.4);
-        border-right: 1px dashed rgba(52,152,219,0.4);
-      }
-      .tl-overlay-main {
-        background: rgba(73,187,231,0.25);
-        border: 0 solid rgba(255,165,0,0.5);
-        box-sizing: content-box;
-      }
-      .tl-padding {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        border: 0px solid rgba(158,113,221,0.5);
-      }
-      /* http://prismjs.com/download.html?themes=prism&languages=markup+css */
-      /**
-       * prism.js default theme for JavaScript, CSS and HTML
-       * Based on dabblet (http://dabblet.com)
-       * @author Lea Verou
-       */
-      .tl-codeWrap .token.comment,
-      .tl-codeWrap .token.prolog,
-      .tl-codeWrap .token.doctype,
-      .tl-codeWrap .token.cdata {
-        color: #b9bec9;
-      }
-      .tl-codeWrap .token.punctuation {
-        color: #ccc; /* punctuation */
-      }
-      .tl-codeWrap .token.property,
-      .tl-codeWrap .token.tag,
-      .tl-codeWrap .token.boolean,
-      .tl-codeWrap .token.number,
-      .tl-codeWrap .token.constant,
-      .tl-codeWrap .token.symbol,
-      .tl-codeWrap .token.deleted {
-        color: #d259ff;
-      }
-      .tl-codeWrap .token.selector,
-      .tl-codeWrap .token.attr-name,
-      .tl-codeWrap .token.string,
-      .tl-codeWrap .token.char,
-      .tl-codeWrap .token.builtin,
-      .tl-codeWrap .token.inserted {
-        color: #7ebd00; /* attr name */
-      }
-      .tl-codeWrap .token.atrule,
-      .tl-codeWrap .token.attr-value,
-      .tl-codeWrap .token.keyword {
-        color: #52b2e5;
-      }
-      .tl-codeWrap .token.operator,
-      .tl-codeWrap .token.entity,
-      .tl-codeWrap .token.url,
-      .tl-codeWrap .language-css .token.string,
-      .tl-codeWrap .style .token.string {
-        color: #a67f59;
-      }
-      .tl-codeWrap .token.function {
-        color: #dd4a68;
-      }
-      .tl-codeWrap .token.regex,
-      .tl-codeWrap .token.important,
-      .tl-codeWrap .token.variable {
-        color: #e90;
-      }
-      .tl-codeWrap .token.important {
-        font-weight: bold;
-      }
-      @-webkit-keyframes tl-show {
-        0% {
-          -webkit-transform: translate(0, -100%);
-                  transform: translate(0, -100%);
-        }
-      }
-      @keyframes tl-show {
-        0% {
-          -webkit-transform: translate(0, -100%);
-                  transform: translate(0, -100%);
-        }
-      }
-      @-webkit-keyframes tl-hide {
-        45% {
-          -webkit-transform: translate(0, 30%);
-                  transform: translate(0, 30%);
-        }
-        100% {
-          -webkit-transform: translate(0, -100%);
-                  transform: translate(0, -100%);
-        }
-      }
-      @keyframes tl-hide {
-        45% {
-          -webkit-transform: translate(0, 30%);
-                  transform: translate(0, 30%);
-        }
-        100% {
-          -webkit-transform: translate(0, -100%);
-                  transform: translate(0, -100%);
-        }
-      }
-      @-webkit-keyframes tl-reload {
-        50%,
-        60% {
-          -webkit-transform: translate(0, -120%);
-                  transform: translate(0, -120%);
-        }
-      }
-      @keyframes tl-reload {
-        50%,
-        60% {
-          -webkit-transform: translate(0, -120%);
-                  transform: translate(0, -120%);
-        }
-      }
+<style>
+.tl-wrap {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
 
-   </style>
+.tl-wrap.-out .tl-codeWrap {
+  -webkit-animation: 0.5s tl-hide forwards !important;
+  animation: 0.5s tl-hide forwards !important;
+}
 
-   <div class="tl-wrap">
-      <div class='tl-overlay-vertical'></div>
-      <div class='tl-overlay-horizontal'></div>
+.tl-wrap.-out .tl-canvas {
+  transition: opacity 0.3s;
+  opacity: 0;
+}
 
-      <div class='tl-overlay-main'>
-         <span class='tl-padding'></span>
-         <div class='tl-tooltip'>
-            <span class='tl-tooltip-info'>
-               <span class='tl-tooltip-elementName'></span><!--
-            --><span class='tl-tooltip-classes'></span><!--
-            --><span class='tl-tooltip-ids'></span><!--
-            --></span><!--
-         --><span class='tl-tooltip-size'></span>
-         </div>
-      </div>
+.tl-codeWrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000001;
+  padding: 4px;
+  -webkit-animation: 0.4s tl-show forwards;
+  animation: 0.4s tl-show forwards;
+}
 
-      <div class='tl-codeWrap'>
-         <code class='tl-code language-markup'>&lt;html&gt;</code>
-      </div>
-   </div>
+.tl-code {
+  display: inline-block;
+  max-width: 100%;
+  box-sizing: border-box;
+  background: #fff;
+  box-shadow: 0 0 0 1px #eee;
+  font-family: Consolas, Monaco, 'Andale Mono', monospace;
+  font-size: 13px;
+  font-weight: 400;
+  color: #aaa;
+  padding: 5px 6px 4px;
+  border-radius: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+/* http://prismjs.com/download.html?themes=prism&languages=markup+css */
+/**
+    * prism.js default theme for JavaScript, CSS and HTML
+    * Based on dabblet (http://dabblet.com)
+    * @author Lea Verou
+    */
 
+.tl-codeWrap .token.comment,
+.tl-codeWrap .token.prolog,
+.tl-codeWrap .token.doctype,
+.tl-codeWrap .token.cdata {
+  color: #b9bec9;
+}
+
+.tl-codeWrap .token.punctuation {
+  color: #ccc;
+    /* punctuation */;
+}
+
+.tl-codeWrap .token.property,
+.tl-codeWrap .token.tag,
+.tl-codeWrap .token.boolean,
+.tl-codeWrap .token.number,
+.tl-codeWrap .token.constant,
+.tl-codeWrap .token.symbol,
+.tl-codeWrap .token.deleted {
+  color: #d259ff;
+}
+
+.tl-codeWrap .token.selector,
+.tl-codeWrap .token.attr-name,
+.tl-codeWrap .token.string,
+.tl-codeWrap .token.char,
+.tl-codeWrap .token.builtin,
+.tl-codeWrap .token.inserted {
+  color: #7ebd00;
+    /* attr name */;
+}
+
+.tl-codeWrap .token.atrule,
+.tl-codeWrap .token.attr-value,
+.tl-codeWrap .token.keyword {
+  color: #52b2e5;
+}
+
+.tl-codeWrap .token.operator,
+.tl-codeWrap .token.entity,
+.tl-codeWrap .token.url,
+.tl-codeWrap .language-css .token.string,
+.tl-codeWrap .style .token.string {
+  color: #a67f59;
+}
+
+.tl-codeWrap .token.function {
+  color: #dd4a68;
+}
+
+.tl-codeWrap .token.regex,
+.tl-codeWrap .token.important,
+.tl-codeWrap .token.variable {
+  color: #e90;
+}
+
+.tl-codeWrap .token.important {
+  font-weight: bold;
+}
+
+@-webkit-keyframes tl-show {
+  0% {
+    -webkit-transform: translate(0, -100%);
+    transform: translate(0, -100%);
+  };
+}
+
+@keyframes tl-show {
+  0% {
+    -webkit-transform: translate(0, -100%);
+    transform: translate(0, -100%);
+  };
+}
+
+@-webkit-keyframes tl-hide {
+  45% {
+    -webkit-transform: translate(0, 30%);
+    transform: translate(0, 30%);
+  }
+
+  100% {
+    -webkit-transform: translate(0, -100%);
+    transform: translate(0, -100%);
+  };
+}
+
+@keyframes tl-hide {
+  45% {
+    -webkit-transform: translate(0, 30%);
+    transform: translate(0, 30%);
+  }
+
+  100% {
+    -webkit-transform: translate(0, -100%);
+    transform: translate(0, -100%);
+  };
+}
+</style>
+
+<div class="tl-wrap">
+  <canvas width='100' height='100' id='tl-canvas' class='tl-canvas'></canvas>
+
+  <div class='tl-codeWrap'>
+    <code class='tl-code language-markup'>&lt;html&gt;</code>
+  </div>
+</div>
 </template>
